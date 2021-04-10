@@ -33,7 +33,7 @@
 <details>
   <summary>/src/index.js /src/App.js</summary>
  
- /src/App.js
+### /src/App.js
  ```node
  import React from 'react';
 
@@ -41,8 +41,8 @@ export default () => {
     return <h1>Widgets App</h1>;
 }
 ```
-/src/index.js
-```
+### /src/index.js
+```node
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
@@ -52,9 +52,86 @@ ReactDOM.render(<App />, document.querySelector('#root'));
 </details>
 
 <details>
-  <summary>next item</summary>
+  <summary>define items array in App.js, pass item as prop to Accordion component </summary>
  
+### /src/App.js
+ ```node
+ import React from 'react';
+import Accordion from './components/Accordion';
+
+const items = [
+    {
+      title: "What is React?",
+      content: "React is a front end javascript framework",
+    },
+    {
+      title: "Why use React?",
+      content: "React is a favorite JS library among engineers",
+    },
+    {
+      title: "How do you use React?",
+      content: "You use React by creating components",
+    },
+  ];
+
+export default () => {
+    return ( 
+        <div>
+            <Accordion items={items} />
+        </div>
+    );
+};
+```
+### /src/components/Accordion.js    
+### OUTPUT: 3  
+```node
+import React from 'react';
+
+const Accordion = ({ items }) => {
+    return <h1>{items.length}</h1>;
+};
+
+export default Accordion;
+```
 </details>
+
+<details>
+  <summary>Render items list using map function, use {item.title} as key</summary>
+ 
+### /src/components/Accordion.js 
+```node
+import React from 'react';
+
+const Accordion = ({ items }) => {
+    const renderedItems = items.map(item => {
+        return <div key={item.title}>
+            <div className="title active">
+                <i className="dropdown icon"></i>
+                {item.title}
+            </div>
+            <div className="content active">
+                <p>{item.content}</p>
+            </div>
+        </div>
+    });
+
+    return <div className="ui styled accordion">{renderedItems}</div>
+};
+
+export default Accordion;
+```
+</details>
+
+<details>
+  <summary>Add semantic ui css in header</summary>
+  
+ ### public/index.html 
+ ```node
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
+ ```
+</details>
+
+
 
 <!-- GETTING STARTED -->
 ## Getting Started
