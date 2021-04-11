@@ -139,18 +139,19 @@ export default Accordion;
 import React from 'react';
 
 const Accordion = ({ items }) => {
-    const renderedItems = items.map(item => {
-        return <React.fragment key={item.title}>
+    const renderedItems = items.map((item) => {
+        return (
+          <React.fragment key={item.title}>
             <div className="title active">
-                <i className="dropdown icon"></i>
-                {item.title}
+              <i className="dropdown icon"></i>
+              {item.title}
             </div>
             <div className="content active">
-                <p>{item.content}</p>
+              <p>{item.content}</p>
             </div>
-        </React.fragment>
+          </React.fragment>
+        );
     });
-
     return <div className="ui styled accordion">{renderedItems}</div>
 };
 
@@ -159,11 +160,33 @@ export default Accordion;
 </details>
 
 <details>
-  <summary>create onClick event handler</summary>
+  <summary>create onClick event handler, add index</summary>
   
  ### /src/components/Accordion.js
  ```node
- 
+ import React from 'react';
+
+const Accordion = ({ items }) => {
+    const renderedItems = items.map((item, index) => {
+        return (
+            <React.Fragment key={item.title}>
+                <div 
+                    className="title active"
+                    onClick={() => console.log('Title Clicked', index)}
+                >
+                    <i className="dropdown icon"></i>
+                    {item.title}
+                </div>
+                <div className="content active">
+                    <p>{item.content}</p>
+                </div>
+            </React.Fragment>
+        );
+    });
+    return <div className="ui styled accordion">{renderedItems}</div>
+};
+
+export default Accordion;
  ```
 </details>
 
