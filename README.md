@@ -227,14 +227,38 @@ export default Accordion;
 </details>
 
 <details>
+  <summary>useState hook system</summary>
+
+|                | Class Components                      |   | Function Components  |
+|:---------------|:--------------------------------------|:--|:---------------------|
+| Initialization | state = { activeIndex:0 }             |:arrow_right:| useState(0);         |
+| Reference      | this.state.activeIndex                |:arrow_right:| activeIndex;         |
+| Updates        | this.setState({ activeIndex: 10 })    |:arrow_right:| setActiveIndex(10);  |
+
+### Multiple states components
+|                | Class Components                              |             | Function Components                                |
+|:---------------|:----------------------------------------------|:--|:---------------------------------------------------|
+| Initialization | state = { activeIndex:0, term: '' }           |:arrow_right:| const [activeindex, setActiveIndex] = useState(0); |
+|                |                                               |             | const [term, setTerm] = useState('');              |
+| Reference      | this.state.activeIndex;                       |:arrow_right:| activeIndex;                                       |
+|                | this.state.term;                              |             | term;                                              |
+| Updates        | this.setState({ activeIndex: 10, term: 'hi' })|:arrow_right:| setActiveIndex(10);                                |
+|                |                                               |             | setTerm('hi');                                     |
+ ```node
+ 
+ ```
+</details>
+
+<details>
   <summary>blah blah</summary>
   
  ### /src/blah blah
  ```node
  
  ```
+ ### multiple state components
+ 
 </details>
-
 
 <!-- GETTING STARTED -->
 ## Getting Started
