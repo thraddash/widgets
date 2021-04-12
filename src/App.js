@@ -15,11 +15,11 @@ const items = [
       content: "You use React by creating components",
     },
   ];
-
-export default () => {
+const App = () => {
     return ( 
         <div>
             <Accordion items={items} />
         </div>
     );
 };
+export default App;
