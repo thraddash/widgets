@@ -74,13 +74,14 @@ const items = [
     },
   ];
 
-export default () => {
+const App = () => {
     return ( 
         <div>
             <Accordion items={items} />
         </div>
     );
 };
+export default App;
 ```
 ### /src/components/Accordion.js    
 ### OUTPUT: 3  
@@ -191,11 +192,37 @@ export default Accordion;
 </details>
 
 <details>
-  <summary>blah blah</summary>
+  <summary>Add helper method onTitleClick to function component</summary>
   
- ### /src/blah blah
+ ### /src/components/Accordion.js
  ```node
- 
+ import React from 'react';
+
+const Accordion = ({ items }) => {
+    const onTitleClick = (index) => {
+        console.log('Title clicked', index);
+    };
+
+    const renderedItems = items.map((item, index) => {
+        return (
+            <React.Fragment key={item.title}>
+                <div 
+                    className="title active"
+                    onClick={() => onTitleClick(index)}
+                >
+                    <i className="dropdown icon"></i>
+                    {item.title}
+                </div>
+                <div className="content active">
+                    <p>{item.content}</p>
+                </div>
+            </React.Fragment>
+        );
+    });
+    return <div className="ui styled accordion">{renderedItems}</div>
+};
+
+export default Accordion;
  ```
 </details>
 
