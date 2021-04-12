@@ -74,13 +74,14 @@ const items = [
     },
   ];
 
-export default () => {
+const App = () => {
     return ( 
         <div>
             <Accordion items={items} />
         </div>
     );
 };
+export default App;
 ```
 ### /src/components/Accordion.js    
 ### OUTPUT: 3  
