@@ -10,12 +10,15 @@
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#accordion-widget">Accordion Widget</a></li>
+        <li><a href="#wikipedia-search-widget">Wikipedia Search Widget</a></li>
+      </ul>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
     <li><a href="#Starting the App">Starting the App</a></li>
@@ -25,11 +28,7 @@
 
 ## About the Project
 
-
-### Modules Used
-
-
-### Build step
+## Accordion Widget
 <details>
   <summary>/src/index.js /src/App.js</summary>
  
@@ -298,15 +297,17 @@ export default function App() {
 ```
 </details>
 
+## Wikipedia Search Widget
+```
+https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=SEARCHTERM
+```
+
 <details>
-  <summary>blah blah</summary>
+  <summary>test</summary>
   
- ### /src/blah blah
- ```node
+```node
  
  ```
- ### multiple state components
- 
 </details>
 
 <!-- GETTING STARTED -->
