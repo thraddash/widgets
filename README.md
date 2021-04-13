@@ -21,7 +21,7 @@
         <li><a href="#prerequisites">Prerequisites</a></li>
       </ul>
     </li>
-    <li><a href="#Starting the App">Starting the App</a></li>
+    <li><a href="#starting-the-app">Starting the App</a></li>
 
   </ol>
 </details>
@@ -303,7 +303,7 @@ https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch
 ```
 
 <details>
-  <summary>/components/Search.js & App.js</summary>
+  <summary>Create Search component & render to App.js</summary>
 
 ### /components/Search.js
 ```node
@@ -330,6 +330,61 @@ const App = () => {
 };
 export default App;
 ```
+</details>
+<details>
+  <summary>Add semantic ui, assign value prop + onChange event handler </summary>
+
+### Search.js
+```node
+import React, { useState } from 'react';
+
+const Search = () => {
+    const [term, setTerm] = useState('');
+
+    return (
+        <div>
+            <div className="ui form">
+                <div className="field">
+                    <label>Enter Search Term</label>
+                    <input className="input" />
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default Search; 
+```
+### assign value prop to Input form, assign onChange event handler to setter func setTerm of useState
+```node
+import React, { useState } from 'react';
+
+const Search = () => {
+    const [term, setTerm] = useState('');
+
+    return (
+        <div>
+            <div className="ui form">
+                <div className="field">
+                    <label>Enter Search Term</label>
+                    <input 
+                        value={term}
+                        onChange={e => setTerm(e.target.value)}
+                        className="input" 
+                    />
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default Search;
+```
+</details>
+
+<details>
+  <summary> blah </summary>
+  
 </details>
 
 <!-- GETTING STARTED -->
