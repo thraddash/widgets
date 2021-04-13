@@ -30,7 +30,7 @@
 
 ## Accordion Widget
 <details>
-  <summary>/src/index.js /src/App.js</summary>
+  <summary>/src/index.js & /src/App.js</summary>
  
 ### /src/App.js
  ```node
@@ -303,11 +303,48 @@ https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch
 ```
 
 <details>
-  <summary>test</summary>
-  
+  <summary>/components/Search.js & App.js</summary>
+
+### /components/Search.js
 ```node
- 
- ```
+import React from 'react';
+
+const Search = () => {
+    return <h1>Search</h1>;
+}
+
+export default Search; 
+```
+
+### App.js
+```node
+import React from 'react';
+import Accordion from './components/Accordion';
+import Search from './components/Search';
+
+const items = [
+    {
+      title: "What is React?",
+      content: "React is a front end javascript framework",
+    },
+    {
+      title: "Why use React?",
+      content: "React is a favorite JS library among engineers",
+    },
+    {
+      title: "How do you use React?",
+      content: "You use React by creating components",
+    },
+  ];
+const App = () => {
+    return ( 
+        <div>
+            <Search/>
+        </div>
+    );
+};
+export default App;
+```
 </details>
 
 <!-- GETTING STARTED -->
