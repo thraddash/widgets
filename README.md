@@ -276,17 +276,20 @@ const useState = React.useState;
 
 // don't change the Component name "App"
 export default function App() {
-    
+
+// 1.) whenever you call useState, get back two element inside of an array destructuring     
     const [count, setCount] = useState(0);
     
-    const onButtonClick = (count) => {
-        count = count + 1
-        setCount(count)
+    const onButtonClick = () => {
+        setCount(count + 1);
     };
-    
+   
+// 2.) update JSX block <h1>Current Count: {count}, referencing count from the useState,
+// 3.) onClick event, update setCount(count + 1);, once called, entire component re-render
+
     return (
         <div>
-            <button onClick={() => onButtonClick(count)}>Click Me!</button>
+            <button onClick={onButtonClick}>Click Me!</button>
             
             <h1>Current Count: {count}</h1>
         </div>
