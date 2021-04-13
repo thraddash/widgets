@@ -299,7 +299,7 @@ export default function App() {
 
 ## Wikipedia Search Widget
 ```
-https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=SEARCHTERM
+https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&origin=*&srsearch=SEARCHTERM
 ```
 
 <details>
@@ -383,8 +383,215 @@ export default Search;
 </details>
 
 <details>
-  <summary> blah </summary>
+  <summary> useEffect hook to detect term has changed </summary>
   
+```
+component rendered 1st time only, 2nd argv empty array []
+component rendered 1st time, whenever it re-renders + initial render, no 2nd argv
+component rendered 1st time & whenever it re-render + some data have changed, 2nd argv [data] array
+```
+### 3 Options async await for useEffect
+#### Option 1 (helper function)
+```node
+// declare temporary helper function const search, evoke function search()  
+    useEffect(() => {
+        const search = async () => {
+            await axios.get('https://en.wikipedia.org/w/api.php');
+        }
+        search();
+    }, [term]);
+```
+#### Option 2 (function wrapped with parenthesis, follow by () to evoke function
+```node
+// declare a function, wrap async with parenthesis, follow by () to immediately evoke the function 
+    useEffect(() => {
+        (async () => {
+            await axios.get('https://en.wikipedia.org/w/api.php');
+        })();
+
+    }, [term]);
+```
+#### Option 3 (axios promises)
+```node
+// use axios promises 
+// making a request with axios, returns a promise
+// chain on with .then stmt, arrow function will be envoked with the response from the api
+    useEffect(() => {
+        axios.get('https://en.wikipedia.org/w/api.php')
+            .then((response) => {
+                console.log(response.data);
+            });
+
+    }, [term]);
+```    
+
+</details>
+
+<details>
+  <summary> Convert API to baseURL + params </summary>
+ 
+```node
+useEffect(() => {
+        const search = async () => {
+            await axios.get('https://en.wikipedia.org/w/api.php', {
+                params: {
+                    action: 'query',
+                    list: 'search',
+                    origin: '*',
+                    format: 'json',
+                    srsearch: term
+                }
+            });
+        }
+        
+        search();
+    }, [term]);
+```
+</details>
+
+<details>
+  <summary> Extract response.data, pass data to new useState object setResults, add case if term is defined </summary>
+ 
+```node
+const Search = () => {
+    const [term, setTerm] = useState('');
+    const [results, setResults] = useState([]);
+
+    console.log(results);
+
+    useEffect(() => {
+        const search = async () => {
+            const { data } = await axios.get('https://en.wikipedia.org/w/api.php', {
+                params: {
+                    action: 'query',
+                    list: 'search',
+                    origin: '*',
+                    format: 'json',
+                    srsearch: term
+                }
+            });
+
+            setResults(data.query.search);
+        };
+ 
+        if (term) {
+            search();
+        }
+    }, [term]);
+```
+</details>
+
+<details>
+  <summary> Mapp out data array to JSX block, add key prop key={result.pageid}  </summary>
+ 
+```node
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
+const Search = () => {
+    const [term, setTerm] = useState('');
+    const [results, setResults] = useState([]);
+
+    useEffect(() => {
+        const search = async () => {
+            const { data } = await axios.get('https://en.wikipedia.org/w/api.php', {
+                params: {
+                    action: 'query',
+                    list: 'search',
+                    origin: '*',
+                    format: 'json',
+                    srsearch: term
+                }
+            });
+
+            setResults(data.query.search);
+        };
+        
+        if (term) {
+            search();
+        }
+    }, [term]);
+
+    const renderedResults = results.map((result) => {
+        return (
+            <div key={result.pageid} className="item">
+                <div className="content">
+                    <div className="header">
+                        {result.title}    
+                    </div>
+                    {result.snippet}
+                </div>
+            </div>
+        )
+
+    });
+
+    return (
+        <div>
+            <div className="ui form">
+                <div className="field">
+                    <label>Enter Search Term</label>
+                    <input 
+                        value={term}
+                        onChange={e => setTerm(e.target.value)}
+                        className="input" 
+                    />
+                </div>
+            </div>
+            <div className="ui celled list">
+                {renderedResults}
+            </div>
+        </div>
+    );
+}
+
+export default Search;
+```
+</details>
+
+<details>
+  <summary> Output string result.snippet to JSX </summary>
+ 
+### Option 1: Note - Vulnerable to XSS Attack 
+```node
+ const renderedResults = results.map((result) => {
+        return (
+            <div key={result.pageid} className="item">
+                <div className="content">
+                    <div className="header">
+                        {result.title}    
+                    </div>
+                    <span dangerouslySetInnerHTML={{ __html: result.snippet}}></span>
+                </div>
+            </div>
+        )
+    });
+```
+
+### Option 2: Replace html sytax with empty string
+```
+ const renderedResults = results.map((result) => {
+        const stripedHtml = result.snippet.replace(/<[span class="searchmatch">*</span]+>/g, '');
+        return (
+            <div key={result.pageid} className="item">
+                <div className="content">
+                    <div className="header">
+                        {result.title}    
+                    </div>
+                    {stripedHtml}
+                </div>
+            </div>
+        )
+    });
+```
+</details>
+
+<details>
+  <summary> blah </summary>
+ 
+```node
+
+```
 </details>
 
 <!-- GETTING STARTED -->
