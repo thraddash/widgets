@@ -745,18 +745,159 @@ export default Search;
 </details>
 
 <details>
-  <summary> blah </summary>
- 
-```node
+  <summary> Fix warning missing dependency 'results.length in useEffect array </summary>
 
+### Add results.length to dependency array  
+```
+Anytime you make a reference to a state or props in useEffect, Eslint wants you to add a reference in useEffect dependecy array  
+useEffect dependency array controls when useEffect gets run.
+Adding results.length will trigger useEffect to re-run, since the initial value of results.length started with 0 and later changed to another valueh
+```
+
+### Solution: use debouncedTerm - setup a timer, cancel timer
+- create new state debouncedTerm 
+- create 2 seperate useEffect functions     
+-   
+- useEffect 1: for term  
+- user start typing: immediately update term , 
+  - set timer to update debouncedTerm
+- user start typing: cancel previous timer
+  - immediately update term
+  - set a timer to update debouchedTerm
+```node
+const Search = () => {
+    const [term, setTerm] = useState('');
+    // create state debouncedTerm
+    const [debouncedTerm, setDebouncedTerm] = useState(term);
+    const [results, setResults] = useState([]);
+    
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            setDebouncedTerm(term);
+        }, 1000);
+
+        // return cleanup function to reset timerId
+        return () => {
+            clearTimeout(timerId);
+        };
+    }, [term]);
+```
+#### Summary:  
+```
+1st useEffect will run everytime term changes, a change will be queued up to debouncedTerm and executes in 1 second
+if user enter input too quickly in term, timer is clear and setup a new timer
+if debounchedTerm went through, it will run the 2nd useEffect, if search term is not empty, it will make a call search
+to wikipedia and updates the results piece of state.
+```
+
+- useEffect 2: for debouncedTerm
+-
+- user stop typing for 500ms: debounchedTerm updated
+- state update causes re-render: useEffect watching debouncedTerm runs, data fetched 
+```node
+useEffect(() => {
+        const search = async () => {
+            const { data } = await axios.get('https://en.wikipedia.org/w/api.php', {
+                params: {
+                    action: 'query',
+                    list: 'search',
+                    origin: '*',
+                    format: 'json',
+                    srsearch: debouncedTerm,
+                }
+            });
+
+            setResults(data.query.search);
+        };
+        if (term){
+            search();
+        }
+    }, [debouncedTerm]);
 ```
 </details>
 
 <details>
-  <summary> blah </summary>
+  <summary> Overview Search.js </summary>
  
 ```node
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
+const Search = () => {
+    const [term, setTerm] = useState('');
+    const [debouncedTerm, setDebouncedTerm] = useState(term);
+    const [results, setResults] = useState([]);
+
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            setDebouncedTerm(term);
+        }, 1000);
+
+        return () => {
+            clearTimeout(timerId);
+        };
+    }, [term]);
+
+    useEffect(() => {
+        const search = async () => {
+            const { data } = await axios.get('https://en.wikipedia.org/w/api.php', {
+                params: {
+                    action: 'query',
+                    list: 'search',
+                    origin: '*',
+                    format: 'json',
+                    srsearch: debouncedTerm,
+                }
+            });
+
+            setResults(data.query.search);
+        };
+        if (term){
+            search();
+        }
+    }, [debouncedTerm]);
+
+    const renderedResults = results.map((result) => {
+        return (
+            <div key={result.pageid} className="item">
+                <div className="right floated content">
+                    <a 
+                        className="ui button"
+                        href={`https://en.wikipedia.org?curid=${result.pageid}`}
+                    >
+                        Go
+                    </a>
+                </div>
+                <div className="content">
+                    <div className="header">
+                        {result.title}    
+                    </div>
+                    <span dangerouslySetInnerHTML={{ __html: result.snippet}}></span>
+                </div>
+            </div>
+        )
+    });
+
+    return (
+        <div>
+            <div className="ui form">
+                <div className="field">
+                    <label>Enter Search Term</label>
+                    <input 
+                        value={term}
+                        onChange={e => setTerm(e.target.value)}
+                        className="input" 
+                    />
+                </div>
+            </div>
+            <div className="ui celled list">
+                {renderedResults}
+            </div>
+        </div>
+    );
+}
+
+export default Search;
 ```
 </details>
 
