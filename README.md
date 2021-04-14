@@ -614,6 +614,51 @@ const renderedResults = results.map((result) => {
 </details>
 
 <details>
+  <summary> Throttle API request, wait for 500ms </summary>
+ 
+### ToDo: 
+```
+- set a timer to search in 500ms
+- cancel previous timer
+- set a timer to search in 500ms
+- last timer created and executes
+
+setTimeout(() => console.log('hi there'), 10000)
+OUTPUT: 117 identifier
+
+clearTimeout(117)
+```
+
+```node
+useEffect(() => {
+        const search = async () => {
+            const { data } = await axios.get('https://en.wikipedia.org/w/api.php', {
+                params: {
+                    action: 'query',
+                    list: 'search',
+                    origin: '*',
+                    format: 'json',
+                    srsearch: term
+                }
+            });
+
+            setResults(data.query.search);
+        };
+        
+        const timeoutId = setTimeout(() => {
+            if (term) {
+                search();
+            }
+        }, 1000);
+
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, [term]);
+```
+</details>
+
+<details>
   <summary> blah </summary>
  
 ```node
