@@ -11,8 +11,9 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="#accordion-widget">Accordion Widget</a></li>
-        <li><a href="#wikipedia-search-widget">Wikipedia Search Widget</a></li>
+        <li><a href="#accordion-widget-usestate">Accordion Widget (useState)</a></li>
+        <li><a href="#wikipedia-search-widget-usestate-useeffect">Wikipedia Search Widget (useState, useEffect)</a></li>
+        <li><a href="#dropdown-widget-usestate-useeffect-useref">Dropdown Widget  (useState, useEffect, useRef)</a></li>
       </ul>
     </li>
     <li>
@@ -28,7 +29,7 @@
 
 ## About the Project
 
-## Accordion Widget
+## Accordion Widget useState
 <details>
   <summary>/src/index.js & /src/App.js</summary>
  
@@ -297,7 +298,7 @@ export default function App() {
 ```
 </details>
 
-## Wikipedia Search Widget
+## Wikipedia Search Widget useState useEffect
 ```
 https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&origin=*&srsearch=SEARCHTERM
 ```
@@ -900,6 +901,12 @@ const Search = () => {
 export default Search;
 ```
 </details>
+
+## Dropdown Widget useState useEffect useRef
+<details>
+  <summary> blah </summary>
+  
+</details>  
 
 <!-- GETTING STARTED -->
 ## Getting Started
