@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Dropdown = ({ options, selected, onSelectedChange }) => {
     //hiding and showing option list
     const [open, setOpen] = useState(false);
 
+    //setup useEffect
+    //setup addEventListner to run one time by adding an empty array in the 2nd argv of the arrow function
+    useEffect(() => {
+        document.body.addEventListener('click', () => {
+            console.log('CLICK!!!');            
+        });
+    }, []);
     const renderedOptions = options.map((option) => {
         if(option.value === selected.value) {
             return null;
