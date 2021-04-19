@@ -42,6 +42,7 @@ const App = () => {
             <button onClick={() => setShowDropdown(!showDropdown)}>Toggle Dropdown</button>
             {showDropdown ?
             <Dropdown
+                label="Select a Color"
                 selected={selected}
                 onSelectedChange={setSelected}
                 options={options} /> : null
