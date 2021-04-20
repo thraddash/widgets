@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import Dropdown from './Dropdown';
 import Convert from './Convert';
-require('dotenv').config({ path: '../../../.env' });
-
 
 const options = [
   {
