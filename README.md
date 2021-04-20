@@ -14,6 +14,8 @@
         <li><a href="#accordion-widget-usestate">Accordion Widget (useState)</a></li>
         <li><a href="#wikipedia-search-widget-usestate-useeffect">Wikipedia Search Widget (useState, useEffect)</a></li>
         <li><a href="#dropdown-widget-usestate-useeffect-useref">Dropdown Widget  (useState, useEffect, useRef)</a></li>
+        <li><a href="#translate-widget-usestate-useeffect">Translation Widget  (useState, useEffect)</a></li>
+        <li><a href="#navigation">Navigation</a></li>
       </ul>
     </li>
     <li>
@@ -904,9 +906,334 @@ export default Search;
 
 ## Dropdown Widget useState useEffect useRef
 <details>
-  <summary> blah </summary>
+  <summary> TBA </summary>
   
 </details>  
+
+## Translate Widget useState useEffect
+<details>
+  <summary> Overview + Requirements </summary>
+  
+1.) Input text box  
+2.) Drop down menu component allow user to select a language  
+3.) Create new Convert.js component using useEffect and Axios to tracking text field, selected language to output translated text  
+4.) Require Google translate api key  
+5.) npm install dotenv for .env file holding GOOGLE API KEY  
+6.) set and cancel timmer to throttle Google API call with debounced  
+
+```node
+import React, { useState } from 'react';
+import Dropdown from './components/Dropdown';
+import Translate from './components/Translate';
+
+const App = () => {
+    return (
+        <div>
+            <Translate />
+        </div>
+    );
+};
+export default App;
+```
+</details> 
+
+<details>
+  <summary> Translate.js (Reuse Dropdown component)</summary>
+
+Create 4 props  
+1.) Add label prop for dropdown menu  
+2.) option prop containing list of languages  
+3.) useState hook for current selected language and setLanguage (selected=language)  
+4.) assign onSelectedChange=setLanguage callback to update state and re-render component with the new value  
+
+```node
+import React, { useState } from 'react';
+import Dropdown from './Dropdown';
+
+const options = [
+  {
+    label: 'Spanish',
+    value: 'es',
+  },
+  {
+    label: 'Arabic',
+    value: 'ar',
+  }
+];
+
+const Translate = () => {
+  const [language, setLanguage] = useState(options[0]);
+
+  return (
+    <div>
+      <Dropdown
+        label="Select a Lanaguage"
+        selected={language}
+        onSelectedChange={setLanguage}
+        options={options}
+      />
+    </div>
+  );
+};
+
+export default Translate; 
+  ```
+</details>
+
+<details>
+  <summary> Add semantic ui input form, useState hook for text, setText</summary>
+  
+```node
+import React, { useState } from 'react';
+import Dropdown from './Dropdown';
+
+const options = [
+  {
+    label: 'Afrikaans',
+    value: 'af',
+  },
+  {
+    label: 'Arabic',
+    value: 'ar',
+  },
+];
+
+const Translate = () => {
+  const [language, setLanguage] = useState(options[0]);
+  
+  //for input
+  const [text, setText] = useState('');
+
+  return (
+    <div>
+        <div className="ui form">
+            <div className="field">
+                <label>Enter Text</label>
+                <input value={text} onChange={(e) => setText(e.target.value)}/>
+            </div>
+        </div>
+        <p></p>
+        <Dropdown
+            label="Select a Lanaguage"
+            selected={language}
+            onSelectedChange={setLanguage}
+            options={options}
+        />
+    </div>
+  );
+};
+
+export default Translate;
+```
+</details> 
+
+<details>
+  <summary> Convert.js useEffect hook, track changes to text input and language select</summary>
+
+### Convert.js (useEffect)
+- Receives language and text prop  
+- Add these two props in 2nd arguement of useEffect hook to track changes  
+ 
+```node
+import React, { useState, useEffect } from 'react';
+
+const Convert = ({ language, text }) => {
+    useEffect(() => {
+        console.log('New language or text')
+    }, [language, text]);
+
+    return <div />;
+};
+
+export default Convert;
+```
+
+### Translate.js (output converted text)
+```node
+import React, { useState } from 'react';
+import Dropdown from './Dropdown';
+import Convert from './Convert';
+
+const options = [
+  {
+    label: 'English',
+    value: 'en',
+  },
+  {
+    label: 'Spanish',
+    value: 'es',
+  },
+];
+
+const Translate = () => {
+  const [language, setLanguage] = useState(options[0]);
+  
+  //for input
+  const [text, setText] = useState('');
+
+  return (
+    <div>
+        <div className="ui form">
+            <div className="field">
+                <label>Enter Text</label>
+                <input value={text} onChange={(e) => setText(e.target.value)}/>
+            </div>
+        </div>
+        <p></p>
+        <Dropdown
+            label="Select a Lanaguage"
+            selected={language}
+            onSelectedChange={setLanguage}
+            options={options}
+        />
+        <hr />
+        <h3 className="ui header">Outut:</h3>
+        <Convert text={text} language={language} />
+    </div>
+  );
+};
+
+export default Translate;
+```
+</details> 
+
+<details>
+  <summary> Test axios directly, use dotenv for GOOGLE_API_KEY </summary>
+
+- create .env file  
+- Add .env to .gitignore  
+#### .env
+```node
+REACT_APP_GOOGLE_API_KEY = GOOGLE_API_KEY
+```
+#### Convert.js
+```node
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+require('dotenv').config({ path: '../../../.env' });
+
+const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
+const Convert = ({ language, text }) => {
+    useEffect(() => {
+        axios.post('https://translation.googleapis.com/language/translate/v2', {}, {
+            params: {
+                q: text,
+                target: language.value,
+                key: GOOGLE_API_KEY
+            }
+        });
+    }, [language, text]);
+
+    return <div />;
+};
+
+export default Convert;
+```
+</details> 
+
+<details>
+  <summary> Display translated text, use helper function to wrap axios  </summary>
+
+### Convert.js
+```node
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+require('dotenv').config({ path: '../../../.env' });
+
+const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
+const Convert = ({ language, text }) => {
+    //store translated text, default value empty string
+    const [translated, setTranslated] = useState('');
+
+    // helper function to use await axios
+    useEffect(() => {
+        const doTranslation = async () => {
+            const { data } = await axios.post('https://translation.googleapis.com/language/translate/v2', {}, {
+                params: {
+                    q: text,
+                    target: language.value,
+                    key: GOOGLE_API_KEY
+                }
+            });
+
+            setTranslated(data.data.translations[0].translatedText);
+        };
+
+        doTranslation();
+    }, [language, text]);
+
+    return (
+      <div>
+          <h1 className="ui header">{translated}</h1>
+      </div>  
+    );
+};
+```
+</details> 
+
+<details>
+  <summary> Debounced </summary>
+
+### Convert.js
+```node
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+require('dotenv').config({ path: '../../../.env' });
+
+const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
+
+// receive language and text prop
+// Anytime language or text changes, useEffect hook will be run
+const Convert = ({ language, text }) => {
+    //store translated text, default value empty string
+    const [translated, setTranslated] = useState('');
+
+    // set timer to update debounchedText 500ms, return cleanup function to cancel timer
+    const [debouncedText, setDebouncedText] = useState(text);
+
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            setDebouncedText(text);
+        }, 500);
+
+        return () => {
+            clearTimeout(timerId);
+        }
+    }, [text]);
+
+    useEffect(() => {
+        // helper function to use await axios
+        const doTranslation = async () => {
+            const { data } = await axios.post('https://translation.googleapis.com/language/translate/v2', {}, {
+                params: {
+                    q: debouncedText,
+                    target: language.value,
+                    key: GOOGLE_API_KEY
+                }
+            });
+
+            setTranslated(data.data.translations[0].translatedText);
+        };
+
+        doTranslation();
+    }, [language, debouncedText]);
+
+    return (
+      <div>
+          <h1 className="ui header">{translated}</h1>
+      </div>  
+    );
+};
+
+export default Convert;
+```
+</details> 
+
+## Navigation
+<details>
+  <summary> blah </summary>
+  
+</details> 
 
 <!-- GETTING STARTED -->
 ## Getting Started
