@@ -906,9 +906,537 @@ export default Search;
 
 ## Dropdown Widget useState useEffect useRef
 <details>
-  <summary> TBA </summary>
+  <summary> Initial Dropdown setup with options prop</summary>
+
+#### App.js
+```node
+import React from 'react';
+import Accordion from './components/Accordion';
+import Search from './components/Search';
+import Dropdown from './components/Dropdown';
+
+const items = [
+    {
+      title: "What is React?",
+      content: "React is a front end javascript framework",
+    },
+    {
+      title: "Why use React?",
+      content: "React is a favorite JS library among engineers",
+    },
+    {
+      title: "How do you use React?",
+      content: "You use React by creating components",
+    },
+  ];
+
+const options = [
+    {
+        label: 'The Color Red',
+        value: 'red'
+    },
+    {
+        label: 'The Color Green',
+        value: 'green'
+    },
+    {
+        label: 'A Shade of Blue',
+        value: 'blue'
+    }
+];
+
+const App = () => {
+    return (
+        <div>
+            <Dropdown options={options}/>
+        </div>
+    );
+};
+export default App;
+```
+
+#### Dropdown.js
+```node
   
+import React from 'react';
+
+const Dropdown = () => {
+    return <h1>Dropdown</h1>;
+};
+
+export default Dropdown;
+```
 </details>  
+
+<details>
+  <summary> Render options list in dropdown, add semantic ui form </summary>
+
+#### Dropdown.js
+```node
+import React from 'react';
+
+const Dropdown = ({ options }) => {
+    const renderedOptions = options.map((option) => {
+        return (
+            <div key={option.value} className="item">
+                {option.label}
+            </div>
+        );
+    });
+    return (
+        <div className="ui form">
+            <div className="field">
+                <label className="label">Select a Color</label>
+                <div className="ui selection dropdown visible active">
+                    <i className="dropdown icon"></i>
+                    <div className="text">Select Color</div>
+                    <div className="menu visible transition">
+                        {renderedOptions}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Dropdown;
+```
+
+</details>  
+
+<details>
+  <summary> Add selected, setSelected state, add onClick event handler </summary>
+
+#### App.js
+```node
+import React, { useState } from 'react';
+import Accordion from './components/Accordion';
+import Search from './components/Search';
+import Dropdown from './components/Dropdown';
+
+const items = [
+    {
+      title: "What is React?",
+      content: "React is a front end javascript framework",
+    },
+    {
+      title: "Why use React?",
+      content: "React is a favorite JS library among engineers",
+    },
+    {
+      title: "How do you use React?",
+      content: "You use React by creating components",
+    },
+];
+
+const options = [
+    {
+        label: 'The Color Red',
+        value: 'red'
+    },
+    {
+        label: 'The Color Green',
+        value: 'green'
+    },
+    {
+        label: 'A Shade of Blue',
+        value: 'blue'
+    }
+];
+
+const App = () => {
+    const [selected, setSelected] = useState(options[0]);
+
+    return (
+        <div>
+            <Dropdown
+                selected={selected}
+                onSelectedChange={setSelected}
+                options={options} />
+        </div>
+    );
+};
+export default App;
+```
+
+#### Dropdown.js (onClick event handler)
+```node
+import React from 'react';
+
+const Dropdown = ({ options, selected, onSelectedChange }) => {
+    const renderedOptions = options.map((option) => {
+        return (
+            <div
+                key={option.value}
+                className="item"
+                onClick={() => onSelectedChange(option)}
+            >
+                {option.label}
+            </div>
+        );
+    });
+    return (
+        <div className="ui form">
+            <div className="field">
+                <label className="label">Select a Color</label>
+                <div className="ui selection dropdown visible active">
+                    <i className="dropdown icon"></i>
+                    <div className="text">{selected.label}</div>
+                    <div className="menu visible transition">
+                        {renderedOptions}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Dropdown;
+```
+</details>  
+
+<details>
+  <summary>if current option === selection option do not render</summary>
+  
+#### Dropdown.js
+```node
+import React from 'react';
+
+const Dropdown = ({ options, selected, onSelectedChange }) => {
+    const renderedOptions = options.map((option) => {
+        if(option.value === selected.value) {
+            return null;
+        }
+
+
+        return (
+            <div
+                key={option.value}
+                className="item"
+                onClick={() => onSelectedChange(option)}
+            >
+                {option.label}
+            </div>
+        );
+    });
+    return (
+        <div className="ui form">
+            <div className="field">
+                <label className="label">Select a Color</label>
+                <div className="ui selection dropdown visible active">
+                    <i className="dropdown icon"></i>
+                    <div className="text">{selected.label}</div>
+                    <div className="menu visible transition">
+                        {renderedOptions}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Dropdown;
+```
+</details> 
+
+<details>
+  <summary>add new state open, setOpen to hide open/close dropdown item in list, use ternary expr </summary>
+
+#### Dropdown.js
+```node
+import React, { useState } from 'react';
+
+const Dropdown = ({ options, selected, onSelectedChange }) => {
+    //hiding and showing option list
+    const [open, setOpen] = useState(false);
+
+    const renderedOptions = options.map((option) => {
+        if(option.value === selected.value) {
+            return null;
+        }
+
+        return (
+            <div
+                key={option.value}
+                className="item"
+                onClick={() => onSelectedChange(option)}
+            >
+                {option.label}
+            </div>
+        );
+    });
+    return (
+        <div className="ui form">
+            <div className="field">
+                <label className="label">Select a Color</label>
+                <div onClick={() => setOpen(!open)} className={`ui selection dropdown ${open ? 'visible active' : ''}`}>
+                    <i className="dropdown icon"></i>
+                    <div className="text">{selected.label}</div>
+                    <div className={`menu ${open ? 'visible transition' : ''}`}>
+                        {renderedOptions}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Dropdown;
+```
+</details> 
+
+<details>
+  <summary>add useEffect for document.body.addEventListener for user clicks on the page</summary>
+
+#### Dropdown.js
+```node
+import React, { useState, useEffect } from 'react';
+
+const Dropdown = ({ options, selected, onSelectedChange }) => {
+    //hiding and showing option list
+    const [open, setOpen] = useState(false);
+
+    //setup useEffect
+    //setup addEventListner to run one time by adding an empty array in the 2nd argv of the arrow function
+    useEffect(() => {
+        document.body.addEventListener('click', () => {
+            console.log('CLICK!!!');            
+        });
+    }, []);
+    const renderedOptions = options.map((option) => {
+        if(option.value === selected.value) {
+            return null;
+        }
+
+        return (
+            <div
+                key={option.value}
+                className="item"
+                onClick={() => onSelectedChange(option)}
+            >
+                {option.label}
+            </div>
+        );
+    });
+    return (
+        <div className="ui form">
+            <div className="field">
+                <label className="label">Select a Color</label>
+                <div onClick={() => setOpen(!open)} className={`ui selection dropdown ${open ? 'visible active' : ''}`}>
+                    <i className="dropdown icon"></i>
+                    <div className="text">{selected.label}</div>
+                    <div className={`menu ${open ? 'visible transition' : ''}`}>
+                        {renderedOptions}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Dropdown;
+```
+</details> 
+
+<details>
+  <summary> useEffect update, add cleanup </summary>
+
+#### Add showDropdown, setShowDropdown in
+#### App.js
+```node
+import React, { useState } from 'react';
+import Accordion from './components/Accordion';
+import Search from './components/Search';
+import Dropdown from './components/Dropdown';
+
+const items = [
+    {
+      title: "What is React?",
+      content: "React is a front end javascript framework",
+    },
+    {
+      title: "Why use React?",
+      content: "React is a favorite JS library among engineers",
+    },
+    {
+      title: "How do you use React?",
+      content: "You use React by creating components",
+    },
+];
+
+const options = [
+    {
+        label: 'The Color Red',
+        value: 'red'
+    },
+    {
+        label: 'The Color Green',
+        value: 'green'
+    },
+    {
+        label: 'A Shade of Blue',
+        value: 'blue'
+    }
+];
+
+const App = () => {
+    const [selected, setSelected] = useState(options[0]);
+    const [showDropdown, setShowDropdown] = useState(true);
+
+    return (
+        <div>
+            <button onClick={() => setShowDropdown(!showDropdown)}>Toggle Dropdown</button>
+            {showDropdown ?
+            <Dropdown
+                selected={selected}
+                onSelectedChange={setSelected}
+                options={options} /> : null
+            }
+        </div>
+    );
+};
+export default App;
+```
+
+#### Dropdown.js (add useRef)
+```node
+import React, { useState, useEffect, useRef } from 'react';
+
+const Dropdown = ({ options, selected, onSelectedChange }) => {
+    //hiding and showing option list
+    const [open, setOpen] = useState(false);
+
+    //useRef on parent "ui form"
+    const ref = useRef();
+
+    //setup useEffect
+    //setup addEventListner to run one time by adding an empty array in the 2nd argv of the arrow function
+    useEffect(() => {
+        const onBodyClick = (event) =>{
+            //ref.current.contains checks if element clicked on is inside the ref "ui form"
+            if (ref.current.contains(event.target)) {
+                return;
+            }
+            setOpen(false);
+        };
+
+        document.body.addEventListener("click", onBodyClick, { capture: true });
+        //clean up function
+        return () => {
+            document.body.removeEventListener("click", onBodyClick, {
+                capture: true,
+            });
+        };
+    }, []);
+    
+    const renderedOptions = options.map((option) => {
+        if(option.value === selected.value) {
+            return null;
+        }
+
+        return (
+            <div
+                key={option.value}
+                className="item"
+                onClick={() => onSelectedChange(option)}
+            >
+                {option.label}
+            </div>
+        );
+    });
+    
+    return (
+        <div ref={ref} className="ui form">
+            <div className="field">
+                <label className="label">Select a Color</label>
+                <div onClick={() => setOpen(!open)} className={`ui selection dropdown ${open ? 'visible active' : ''}`}>
+                    <i className="dropdown icon"></i>
+                    <div className="text">{selected.label}</div>
+                    <div className={`menu ${open ? 'visible transition' : ''}`}>
+                        {renderedOptions}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Dropdown;
+```
+</details> 
+
+<details>
+  <summary> Add color text when user select dropdown option </summary>
+
+#### Dropdown.js
+```node
+import React, { useState, useEffect, useRef } from 'react';
+
+const Dropdown = ({ options, selected, onSelectedChange }) => {
+    //hiding and showing option list
+    const [open, setOpen] = useState(false);
+
+    //useRef on parent "ui form"
+    const ref = useRef();
+
+    //setup useEffect
+    //setup addEventListner to run one time by adding an empty array in the 2nd argv of the arrow function
+    useEffect(() => {
+        const onBodyClick = (event) =>{
+            //ref.current.contains checks if element clicked on is inside the ref "ui form"
+            if (ref.current.contains(event.target)) {
+                return;
+            }
+            setOpen(false);
+        };
+
+        document.body.addEventListener("click", onBodyClick, { capture: true });
+        //clean up function
+        return () => {
+            document.body.removeEventListener("click", onBodyClick, {
+                capture: true,
+            });
+        };
+    }, []);
+    
+    const renderedOptions = options.map((option) => {
+        if(option.value === selected.value) {
+            return null;
+        }
+
+        return (
+            <div
+                key={option.value}
+                className="item"
+                onClick={() => onSelectedChange(option)}
+            >
+                {option.label}
+            </div>
+        );
+    });
+
+    return (
+        <div ref={ref} className="ui form">
+            <div className="field">
+                <label className="label">Select a Color</label>
+                <div onClick={() => setOpen(!open)} className={`ui selection dropdown ${open ? 'visible active' : ''}`}>
+                    <i className="dropdown icon"></i>
+                    <div className="text">{selected.label}</div>
+                    <div className={`menu ${open ? 'visible transition' : ''}`}>
+                        {renderedOptions}
+                    </div>
+                </div>
+                <p></p>
+                <h4 className={`ui ${selected.value} header`}>{selected.label}</h4>
+            </div>
+        </div>
+    );
+};
+
+export default Dropdown;
+```
+</details> 
+
 
 ## Translate Widget useState useEffect
 <details>
@@ -1304,10 +1832,296 @@ export default App;
 
 ## Navigation
 <details>
-  <summary> blah </summary>
-  
+  <summary> Create Header component</summary>
+
+#### Header.js
+```node
+import React from 'react';
+
+const Header = () => {
+    return (
+        <div className="ui secondary pointing menu">
+            <a href="/" className="item">
+                Accordion
+            </a>
+            <a href="/list" className="item">
+                Search
+            </a>
+            <a href="/dropdown" className="item">
+                Dropdown
+            </a>
+            <a href="/translate" className="item">
+                Translate
+            </a>
+
+        </div>
+    );
+};
+
+export default Header;
+```
+
+#### import Header.js & Route.js in App component  
+- Use Route component 4 times with path prop <b> "/", "/list", "/dropdown", "/translate" </b>  
+<b>Note:</b> whenever you provide one jsx inside another jsx tag  
+that inner element is provided to the outter element as a prop called <b> children </b>  
+```node
+<Route path="/">
+  <Accordion items={items} />
+</Route>
+```
+
+#### App.js
+```node
+import React, { useState } from 'react';
+import Accordion from './components/Accordion';
+import Search from './components/Search';
+import Dropdown from './components/Dropdown';
+import Translate from './components/Translate';
+import Route from './components/Route';
+import Header from './components/Header';
+
+const items = [
+    {
+      title: "What is React?",
+      content: "React is a front end javascript framework",
+    },
+    {
+      title: "Why use React?",
+      content: "React is a favorite JS library among engineers",
+    },
+    {
+      title: "How do you use React?",
+      content: "You use React by creating components",
+    },
+];
+
+const options = [
+    {
+        label: 'The Color Red',
+        value: 'red'
+    },
+    {
+        label: 'The Color Green',
+        value: 'green'
+    },
+    {
+        label: 'A Shade of Blue',
+        value: 'blue'
+    }
+];
+
+const App = () => {
+    const [selected, setSelected] = useState(options[0]);
+    return (
+        <div>
+            <Header />
+            <Route path="/">
+                <Accordion items={items} />
+            </Route>
+            <Route path="/list">
+                <Search />
+            </Route>
+            <Route path="/dropdown">
+                <Dropdown 
+                    label="Select a color"
+                    options={options}
+                    selected={selected}
+                    onSelectedChange={setSelected}
+                />
+            </Route>
+            <Route path="/translate">
+                <Translate />
+            </Route>
+        </div>
+    );
+};
+export default App;
+```
+
+#### Route.js
+- create 2 prop, path and children (component that you want to display)  
+- return ternary expression
+```node
+const Route = ({ path, children }) => {
+    return window.location.pathname === path ? children : null;
+};
+
+export default Route;
+```
 </details> 
 
+<details>
+  <summary> Create Link component pass prop to anchor tag  </summary>
+
+#### Link.js
+- create an anchor element  
+- pass href and className prop from Header.js to Link.js, create className, href, children
+```node
+import Rect from 'react';
+
+const Link = ({ className, href, children }) => {
+    return <a className={className} href={href}>{children}</a>;
+};
+
+export default Link;
+```
+#### Header.js
+- replace anchor tag with Link tag   
+Note: make sure to pass href and className props and pass it over to Link.js
+```node
+import React from 'react';
+import Link from './Link';
+
+const Header = () => {
+    return (
+        <div className="ui secondary pointing menu">
+            <Link href="/" className="item">
+                Accordion
+            </Link>
+            <Link href="/list" className="item">
+                Search
+            </Link>
+            <Link href="/dropdown" className="item">
+                Dropdown
+            </Link>
+            <Link href="/translate" className="item">
+                Translate
+            </Link>
+        </div>
+    );
+};
+```
+</details>
+
+<details>
+  <summary> add OnClick event handler to prevent page from fully reloading by default </summary>
+ 
+#### Links.js
+```node
+import React from 'react';
+
+const Link = ({ className, href, children }) => {
+    const onClick = (event) => {
+        //prevent full page to reload by default
+        event.preventDefault();
+        window.history.pushState({}, '', href);
+    };
+
+    return <a onClick={onClick} className={className} href={href}>{children}</a>;
+};
+
+export default Link;
+```
+
+#### Detect if navigation have change add popstate
+#### Links.js
+```node
+import React from 'react';
+
+const Link = ({ className, href, children }) => {
+    const onClick = (event) => {
+        //prevent full page to reload by default
+        event.preventDefault();
+        window.history.pushState({}, '', href);
+
+        const navEvent = new PopStateEvent('popstate');
+        window.dispatchEvent(navEvent);
+    };
+
+    return <a onClick={onClick} className={className} href={href}>{children}</a>;
+};
+
+export default Link;
+```
+
+#### addEventListener to Route.js for popstate
+#### Route.js
+```node
+import { useEffect } from 'react';
+//add useEffect when listening to event handler, navEvent
+
+//set useEffect 2nd argv empty array, to run one time
+const Route = ({ path, children }) => {
+    useEffect(() => {
+        const onLocationChange = () => {
+            console.log('Location Change');
+        }
+
+        window.addEventListener('popstate', onLocationChange);
+
+        return () => {
+            window.removeEventListener('popstate', onLocationChange);
+        };
+    }, []);
+
+    return window.location.pathname === path ? children : null;
+};
+
+export default Route;
+```
+
+#### Update Route.js (window.location.pathname is same as currentPath)
+#### Route.js
+```node
+import { useEffect, useState } from 'react';
+//add useEffect when listening to event handler, navEvent
+
+//set useEffect 2nd argv empty array, to run one time
+const Route = ({ path, children }) => {
+    //new useState to update Route component to re-render itself
+    const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+    useEffect(() => {
+        const onLocationChange = () => {
+            setCurrentPath(window.location.pathname);
+        };
+
+        window.addEventListener('popstate', onLocationChange);
+
+        return () => {
+            window.removeEventListener('popstate', onLocationChange);
+        };
+    }, []);
+
+    //return window.location.pathname === path ? children : null;
+    return currentPath === path ? children : null;
+    
+};
+
+export default Route;
+```
+</details>
+
+<details>
+  <summary> Windows (ctrlKey) click on link, enable user to open link in new tab, vice versa with Apple (metaKey) </summary>
+ 
+#### Links.js
+```node
+import React from 'react';
+
+const Link = ({ className, href, children }) => {
+    const onClick = (event) => {
+        // add event metaKey for apple, crtlKey for window (middle mouse button), open link to new window tab
+        if (event.metaKey || event.crtlKey) {
+            return;
+        }
+        //prevent full page to reload by default
+        event.preventDefault();
+        window.history.pushState({}, '', href);
+
+        const navEvent = new PopStateEvent('popstate');
+        window.dispatchEvent(navEvent);
+    };
+
+    return <a onClick={onClick} className={className} href={href}>{children}</a>;
+};
+
+export default Link;
+```
+
+</details> 
+  
 <!-- GETTING STARTED -->
 ## Getting Started
 To get a local copy up and running follow these simple steps.
