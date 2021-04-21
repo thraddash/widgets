@@ -1,7 +1,12 @@
-import Rect from 'react';
+import React from 'react';
 
 const Link = ({ className, href, children }) => {
-    return <a className={className} href={href}>{children}</a>;
+    const onClick = (event) => {
+        //prevent full page to reload by default
+        event.preventDefault();
+    };
+
+    return <a onClick={onClick} className={className} href={href}>{children}</a>;
 };
 
 export default Link;
