@@ -54,6 +54,8 @@ const Dropdown = ({ label, options, selected, onSelectedChange }) => {
                         {renderedOptions}
                     </div>
                 </div>
+                <p></p>
+                <h4 className={`ui ${selected.value} header`}>{selected.label}</h4>
             </div>
         </div>
     );
