@@ -2153,6 +2153,6 @@ To get a local copy up and running follow these simple steps.
 [node-url]: https://nodejs.org/
 [npm-shield]: https://img.shields.io/badge/npm-v6.14.11-orange
 [npm-url]: https://www.npmjs.com/package/npm-install
-[commits-shield]: https://img.shields.io/badge/commits-38-green.svg
+[commits-shield]: https://img.shields.io/badge/commits-76-green.svg
 [commits-url]: https://img.shields.io/github/commit-activity/y/thraddash/widgets
 [product-screenshot]: /src/images/mockup.png
