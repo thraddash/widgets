@@ -1,7 +1,21 @@
+import { useEffect } from 'react';
+//add useEffect when listening to event handler, navEvent
+
+//set useEffect 2nd argv empty array, to run one time
 const Route = ({ path, children }) => {
-    return window.location.pathname === path 
-    ? children
-    : null;
+    useEffect(() => {
+        const onLocationChange = () => {
+            console.log('Location Change');
+        }
+
+        window.addEventListener('popstate', onLocationChange);
+
+        return () => {
+            window.removeEventListener('popstate', onLocationChange);
+        };
+    }, []);
+
+    return window.location.pathname === path ? children : null;
 };
 
 export default Route;
