@@ -4,7 +4,7 @@
 
 # Widgets App
 
-#### Demo: https://flamboyant-beaver-e793f3.netlify.app/translate   
+#### Demo: https://flamboyant-beaver-e793f3.netlify.app/    
 - Translation widget is not working because the GOOGLE Translation API KEY privileges is set to port 3000, Netlify is running on a different port   
 
 <!-- TABLE OF CONTENTS -->
